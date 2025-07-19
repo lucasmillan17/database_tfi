@@ -73,4 +73,19 @@ JOIN empleados em ON his.empleado_id = em.empleado_id
 JOIN departamentos dep ON his.departamento_id = dep.departamento_id
 JOIN sucursales suc ON dep.sucursal_id = suc.sucursal_id;
 
-
+CREATE VIEW vw_empleados_cursos AS
+SELECT
+    cur.nombre as nombre_curso,
+    cur.codigo as codigo_curso,
+    cur.descripcion as descripcion_curso,
+    em.dni as documento_empleado,
+    CONCAT(em.apellido, ', ', em.nombre) as nombre_empleado,
+    DATE_FORMAT(asi.fecha_inicio, '%d/%m/%Y') as cursa_desde,
+    CASE
+    WHEN asi.fecha_fin IS NULL THEN 'CURSA'
+    ELSE DATE_FORMAT(asi.fecha_fin, '%d/%m/%Y')
+    END AS cursa_hasta,
+    asi.resultado as nota_final
+FROM empleado_curso asi
+JOIN cursos cur ON asi.curso_id = cur.curso_id
+JOIN empleados em ON asi.empleado_id = em.empleado_id;
