@@ -11,6 +11,9 @@ SELECT
     tipoem.nombre as tipo_empleado,
     dep.nombre as departamento,
     suc.nombre as sucursal,
+    ciu.nombre as ciudad,
+    prov.nombre as provincia,
+    pais.nombre as pais,
     CONCAT(dir.calle, ' ', dir.numero, 
          IF(dir.piso IS NOT NULL, CONCAT(', Piso ', dir.piso), ''),
          IF(dir.depto IS NOT NULL, CONCAT(', Depto ', dir.depto), ''),
@@ -48,6 +51,7 @@ CREATE VIEW libro_haberes AS
 SELECT
     liq.codigo as liquidacion_nro,
     em.empleado_id as nro_empleado,
+    em.dni as dni_empleado,
     CONCAT(em.apellido, ', ', em.nombre) as nombre_empleado,
     liq.periodo,
     liq.fecha_pago,
@@ -59,7 +63,7 @@ JOIN empleados em ON liq.empleado_id=em.empleado_id;
 
 CREATE VIEW historial_lugar_laboral_empleados AS
 SELECT
-    em.dni as documento_empleado,
+    em.dni as dni_empleado,
     CONCAT(em.apellido, ', ', em.nombre) as nombre_empleado,
     suc.nombre as sucursal,
     dep.nombre as departamento,
@@ -86,6 +90,12 @@ SELECT
     ELSE DATE_FORMAT(asi.fecha_fin, '%d/%m/%Y')
     END AS cursa_hasta,
     asi.resultado as nota_final
+
+    -- datos para comparaciones
+
+    asi.fecha_inicio as fecha_inicio_real,
+    asi.fecha_fin as fecha_fin_real
+    
 FROM empleado_curso asi
 JOIN cursos cur ON asi.curso_id = cur.curso_id
 JOIN empleados em ON asi.empleado_id = em.empleado_id;
