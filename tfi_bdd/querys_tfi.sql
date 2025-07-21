@@ -102,3 +102,35 @@ JOIN empleados em ON rev.empleado_id = em.empleado_id
 WHERE rev.parametro_medico = 'Peso'
  AND rev.fecha_revision >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
 GROUP BY rev.empleado_id, rev.nombre_empleado, em.edad;
+
+/*
+12. Listar todas las Facturas de Ventas cuyo importe bruto sea mayor a $150.000 Se debe
+ mostrar: N° FACTURA, FECHA DE COMPRA, BRUTO TOTAL, NETO TOTAL, IVA,
+ CANTIDAD, PRECIO UNITARIO, DESCRIPCION, RAZON SOCIAL DEL PROVEEDOR.
+*/
+SELECT
+    fac.numero_factura as N°_factura,
+    fac.fecha_factura as fecha_compra,
+    det.cantidad as detalle_cantidad,
+    det.precio_unitario as detalle_precio_producto,
+    prod.descripcion as producto_descripcion,
+    ROUND(SUM(det.precio_unitario * det.cantidad), 2) as factura_bruto_total,
+    ROUND(SUM(det.total_linea), 2) as factura_neto_total,
+    ROUND(neto_total * 0.21) as factura_iva,
+    fac.razon_social
+FROM vw_facturas fac
+JOIN detalle_facturas det ON fac.factura_id = det.factura_id
+JOIN productos prod ON det.producto_id = prod.producto_id
+    WHERE factura_bruto_total > 150000;
+
+/*
+ 14. Generar un reporte consolidado de todos los depósitos que muestre la valoración de los
+ stocks existente a la fecha actual, para los artículos comprendidos entre los códigos 0001
+ y 1100. Se debe contemplar la valorización por cada artículo en cada depósito y un total
+ general de la valoración de todos los depósitos. Se debe mostrar: CODIGO, DESCRIP
+CION DEL ARTICULO, STOCK, NOMBRE DEL DEPOSITO, COSTO UNITARIO y
+ VALORACION.
+ */
+
+
+

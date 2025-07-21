@@ -402,6 +402,13 @@ create table detalle_orden_compras (
 	cantidad int not null,
 	precio_unitario decimal(12,2) not null,
 
+	 total_linea DECIMAL(10,2) 
+        GENERATED ALWAYS AS (
+            ROUND(
+                ((precio_unitario * cantidad), 2
+            )
+        ) STORED,
+
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
 	
@@ -494,6 +501,13 @@ create table detalle_facturas_compras (
 	cantidad int not null,
 	precio_unitario decimal(12,2) not null,
 
+	 total_linea DECIMAL(10,2) 
+        GENERATED ALWAYS AS (
+            ROUND(
+                ((precio_unitario * cantidad), 2
+            )
+        ) STORED,
+
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
 	
@@ -563,6 +577,13 @@ create table detalle_cotizaciones (
 	producto_id int not null,
 	cantidad int not null,
 	precio_unitario decimal(12,2) not null,
+
+	 total_linea DECIMAL(10,2) 
+        GENERATED ALWAYS AS (
+            ROUND(
+                ((precio_unitario * cantidad), 2
+            )
+        ) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
@@ -638,7 +659,16 @@ create table detalle_facturas (
 	factura_id int not null,
 	producto_id int not null,
 	cantidad int not null,
+	descuento decimal(5,2),
+	impuesto decimal(5,2),
 	precio_unitario decimal(10,2) not null,
+
+	 total_linea DECIMAL(10,2) 
+        GENERATED ALWAYS AS (
+            ROUND(
+                ((precio_unitario * cantidad) * (1 - descuento / 100)) * (1 + impuesto / 100), 2
+            )
+        ) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
@@ -1045,6 +1075,13 @@ create table detalle_liquidaciones (
 	concepto_id int not null,
 	cantidad int not null,
 	monto_unitario decimal(10,2) not null,
+
+	monto_total DECIMAL(10,2) 
+        GENERATED ALWAYS AS (
+            ROUND(
+                ((monto_unitario * cantidad), 2
+            )
+        ) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(monto_unitario > 0),	

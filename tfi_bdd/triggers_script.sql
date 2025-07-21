@@ -6,7 +6,7 @@ FOR EACH ROW
 BEGIN
     UPDATE facturas 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_facturas
         WHERE factura_id = NEW.factura_id
     )
@@ -24,7 +24,7 @@ FOR EACH ROW
 BEGIN
     UPDATE facturas 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_facturas
         WHERE factura_id = NEW.factura_id
     )
@@ -40,9 +40,9 @@ CREATE TRIGGER actualizar_total_factura_delete
 AFTER DELETE ON detalle_facturas
 FOR EACH ROW
 BEGIN
-    UPDATE detalle_facturas 
+    UPDATE facturas
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_facturas
         WHERE factura_id = OLD.factura_id
     )
@@ -60,7 +60,7 @@ FOR EACH ROW
 BEGIN
     UPDATE cotizaciones 
     SET precio_total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_cotizaciones
         WHERE cotizacion_id = NEW.cotizacion_id
     )
@@ -78,7 +78,7 @@ FOR EACH ROW
 BEGIN
     UPDATE cotizaciones 
     SET precio_total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_cotizaciones
         WHERE cotizacion_id = NEW.cotizacion_id
     )
@@ -96,7 +96,7 @@ FOR EACH ROW
 BEGIN
     UPDATE cotizaciones 
     SET precio_total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_cotizaciones
         WHERE cotizacion_id = OLD.cotizacion_id
     )
@@ -114,7 +114,7 @@ FOR EACH ROW
 BEGIN
     UPDATE orden_compras 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_orden_compras
         WHERE orden_compra_id = NEW.orden_compra_id
     )
@@ -132,7 +132,7 @@ FOR EACH ROW
 BEGIN
     UPDATE orden_compras 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_orden_compras
         WHERE orden_compra_id = NEW.orden_compra_id
     )
@@ -150,7 +150,7 @@ FOR EACH ROW
 BEGIN
     UPDATE orden_compras 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_orden_compras
         WHERE orden_compra_id = OLD.orden_compra_id
     )
@@ -222,7 +222,7 @@ FOR EACH ROW
 BEGIN
     UPDATE facturas_compras 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_facturas_compras
         WHERE factura_compra_id = NEW.factura_compra_id
     )
@@ -240,7 +240,7 @@ FOR EACH ROW
 BEGIN
     UPDATE facturas_compras 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_facturas_compras
         WHERE factura_compra_id = NEW.factura_compra_id
     )
@@ -258,7 +258,7 @@ FOR EACH ROW
 BEGIN
     UPDATE facturas_compras 
     SET total = (
-        SELECT SUM(cantidad * precio_unitario)
+        SELECT SUM(total_linea)
         FROM detalle_facturas_compras
         WHERE factura_compra_id = OLD.factura_compra_id
     )
@@ -278,7 +278,7 @@ BEGIN
     DECLARE deducciones DECIMAL(10,2);
     
     -- Calcular total bruto
-    SELECT IFNULL(SUM(dl.monto_unitario * dl.cantidad), 0)
+    SELECT IFNULL(SUM(monto_total), 0)
     INTO bruto
     FROM detalle_liquidaciones dl
     JOIN conceptos c ON dl.concepto_id = c.concepto_id
@@ -286,7 +286,7 @@ BEGIN
       AND dl.liquidacion_id = NEW.liquidacion_id;
     
     -- Calcular total deducciones
-    SELECT IFNULL(SUM(dl.monto_unitario * dl.cantidad), 0)
+    SELECT IFNULL(SUM(monto_total), 0)
     INTO deducciones
     FROM detalle_liquidaciones dl
     JOIN conceptos c ON dl.concepto_id = c.concepto_id
@@ -314,7 +314,7 @@ BEGIN
     DECLARE deducciones DECIMAL(10,2);
     
     -- Calcular total bruto
-    SELECT IFNULL(SUM(dl.monto_unitario * dl.cantidad), 0)
+    SELECT IFNULL(SUM(monto_total), 0)
     INTO bruto
     FROM detalle_liquidaciones dl
     JOIN conceptos c ON dl.concepto_id = c.concepto_id
@@ -322,7 +322,7 @@ BEGIN
       AND dl.liquidacion_id = NEW.liquidacion_id;
     
     -- Calcular total deducciones
-    SELECT IFNULL(SUM(dl.monto_unitario * dl.cantidad), 0)
+    SELECT IFNULL(SUM(monto_total), 0)
     INTO deducciones
     FROM detalle_liquidaciones dl
     JOIN conceptos c ON dl.concepto_id = c.concepto_id
@@ -350,7 +350,7 @@ BEGIN
     DECLARE deducciones DECIMAL(10,2);
     
     -- Calcular total bruto
-    SELECT IFNULL(SUM(dl.monto_unitario * dl.cantidad), 0)
+    SELECT IFNULL(SUM(monto_total), 0)
     INTO bruto
     FROM detalle_liquidaciones dl
     JOIN conceptos c ON dl.concepto_id = c.concepto_id
@@ -358,7 +358,7 @@ BEGIN
       AND dl.liquidacion_id = OLD.liquidacion_id;
     
     -- Calcular total deducciones
-    SELECT IFNULL(SUM(dl.monto_unitario * dl.cantidad), 0)
+    SELECT IFNULL(SUM(monto_total), 0)
     INTO deducciones
     FROM detalle_liquidaciones dl
     JOIN conceptos c ON dl.concepto_id = c.concepto_id

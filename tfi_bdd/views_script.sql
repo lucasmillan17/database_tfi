@@ -47,9 +47,11 @@ SELECT
     fac.total,
     est.estado,
     cl.cuil as cuil_cliente,
+    cl.razon_social,
     em.empleado_id as empleado_n°,
     em.nombre as nombre_empleado,
-    suc.nombre as sucursal
+    suc.nombre as sucursal,
+    fac.factura_id
 FROM facturas fac 
 JOIN estado_facturas est ON fac.estado_id=est.estado_id
 JOIN clientes cl ON fac.cliente_id=cl.cliente_id
@@ -98,7 +100,7 @@ SELECT
     WHEN asi.fecha_fin IS NULL THEN 'CURSA'
     ELSE DATE_FORMAT(asi.fecha_fin, '%d/%m/%Y')
     END AS cursa_hasta,
-    asi.resultado as nota_final
+    asi.resultado as nota_final,
 
     -- datos para comparaciones
 
@@ -121,8 +123,8 @@ SELECT
     dir.direccion_completa,
     st.cantidad as stock_deposito
 FROM stocks st
-JOIN productos pro ON st.producto_id=pro.producto_id,
-JOIN almacenes alm ON st.almacen_id=alm.almacen_id,
+JOIN productos pro ON st.producto_id=pro.producto_id
+JOIN almacenes alm ON st.almacen_id=alm.almacen_id
 JOIN vw_direcciones dir ON alm.direccion_id=dir.direccion_id;
 
 CREATE VIEW vw_revisiones_medicas AS
