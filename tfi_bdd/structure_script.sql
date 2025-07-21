@@ -329,7 +329,8 @@ create table stocks (
   	(stock_maximo IS NULL OR stock_minimo IS NULL OR stock_maximo > stock_minimo)
   	AND (stock_minimo IS NULL OR stock_minimo >= 0)
   	),
-	CHECK(cantidad>=0 OR cantidad IS NULL),
+	CHECK(cantidad >=0 OR cantidad IS NULL),
+	CHECK(cantidad >= stock_minimo AND cantidad <= stock_maximo),
 	
 	-- Definimos referencias
 	foreign key(producto_id) references productos(producto_id),
