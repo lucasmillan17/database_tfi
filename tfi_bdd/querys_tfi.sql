@@ -114,14 +114,25 @@ SELECT
     det.cantidad as detalle_cantidad,
     det.precio_unitario as detalle_precio_producto,
     prod.descripcion as producto_descripcion,
-    ROUND(SUM(det.precio_unitario * det.cantidad), 2) as factura_bruto_total,
+    fcb.bruto_factura,
     ROUND(SUM(det.total_linea), 2) as factura_neto_total,
-    ROUND(neto_total * 0.21) as factura_iva,
+    ROUND(SUM(det.total_linea * 0.21)) as factura_iva,
     fac.razon_social
 FROM vw_facturas fac
+JOIN (
+    SELECT 
+    d.factura_id,
+    ROUND(SUM(d.cantidad * d.precio_unitario),2) as bruto_factura
+    FROM detalle_facturas d
+    GROUP BY d.factura_id
+    HAVING (SUM(d.cantidad * d.precio_unitario) > 150000)
+) AS fcb ON fac.factura_id = fcb.factura_id
 JOIN detalle_facturas det ON fac.factura_id = det.factura_id
 JOIN productos prod ON det.producto_id = prod.producto_id
-    WHERE factura_bruto_total > 150000;
+GROUP BY fac.numero_factura, fac.fecha_factura, det.cantidad, det.precio_unitario,
+ prod.descripcion, fcb.bruto_factura, fac.razon_social
+ ORDER BY fac.numero_factura;
+
 
 /*
  14. Generar un reporte consolidado de todos los depósitos que muestre la valoración de los
@@ -131,6 +142,10 @@ JOIN productos prod ON det.producto_id = prod.producto_id
 CION DEL ARTICULO, STOCK, NOMBRE DEL DEPOSITO, COSTO UNITARIO y
  VALORACION.
  */
-
-
-
+ SELECT
+    prod.producto_id,
+    prod.descripcion as producto_descripcion,
+    st.cantidad as stock_producto_almacen,
+    prod.precio_unitario as precio_producto,
+    ROUND((st.cantidad * prod.precio_unitario),2) as valoracion_producto_deposito,
+    SUM()

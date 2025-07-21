@@ -403,11 +403,7 @@ create table detalle_orden_compras (
 	precio_unitario decimal(12,2) not null,
 
 	 total_linea DECIMAL(10,2) 
-        GENERATED ALWAYS AS (
-            ROUND(
-                ((precio_unitario * cantidad), 2
-            )
-        ) STORED,
+        GENERATED ALWAYS AS (ROUND((precio_unitario * cantidad), 2)) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
@@ -502,11 +498,7 @@ create table detalle_facturas_compras (
 	precio_unitario decimal(12,2) not null,
 
 	 total_linea DECIMAL(10,2) 
-        GENERATED ALWAYS AS (
-            ROUND(
-                ((precio_unitario * cantidad), 2
-            )
-        ) STORED,
+        GENERATED ALWAYS AS (ROUND((precio_unitario * cantidad), 2)) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
@@ -579,11 +571,7 @@ create table detalle_cotizaciones (
 	precio_unitario decimal(12,2) not null,
 
 	 total_linea DECIMAL(10,2) 
-        GENERATED ALWAYS AS (
-            ROUND(
-                ((precio_unitario * cantidad), 2
-            )
-        ) STORED,
+        GENERATED ALWAYS AS (ROUND((precio_unitario * cantidad), 2)) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
@@ -664,11 +652,10 @@ create table detalle_facturas (
 	precio_unitario decimal(10,2) not null,
 
 	 total_linea DECIMAL(10,2) 
-        GENERATED ALWAYS AS (
-            ROUND(
-                ((precio_unitario * cantidad) * (1 - descuento / 100)) * (1 + impuesto / 100), 2
-            )
-        ) STORED,
+        GENERATED ALWAYS AS (ROUND((
+			(precio_unitario * cantidad) * 
+			(1 - COALESCE(descuento, 0) / 100)) * 
+			(1 + COALESCE(impuesto, 0) / 100), 2)) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(precio_unitario > 0),
@@ -1077,11 +1064,7 @@ create table detalle_liquidaciones (
 	monto_unitario decimal(10,2) not null,
 
 	monto_total DECIMAL(10,2) 
-        GENERATED ALWAYS AS (
-            ROUND(
-                ((monto_unitario * cantidad), 2
-            )
-        ) STORED,
+        GENERATED ALWAYS AS (ROUND((monto_unitario * cantidad), 2)) STORED,
 
 	CHECK(cantidad > 0),
 	CHECK(monto_unitario > 0),	
