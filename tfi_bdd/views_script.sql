@@ -142,3 +142,8 @@ FROM revisiones_medicas rev
 JOIN parametros_medicos pm ON rev.revision_id = pm.revision_id
 JOIN unidades_medicas un ON pm.unidad_id = un.unidad_id
 JOIN empleados em ON rev.empleado_id = em.empleado_id;
+
+CREATE VIEW vw_personas AS
+SELECT per.*, dir.direccion_completa
+FROM personas per
+JOIN vw_direcciones dir ON per.direccion_id = dir.direccion_id;

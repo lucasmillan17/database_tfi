@@ -24,7 +24,18 @@ SELECT * FROM libro_haberes WHERE periodo = 202301 ORDER BY (liquidacion_nro);
 /*
  3. Listar todos los datos del grupo familiar del empleado con DNI 23156789.
  */
-query3
+SELECT 
+    gf.grupo_familiar_id,
+    gf.descripcion,
+    em.empleado_dni,
+    par.parentezco,
+    per.*
+FROM grupo_familiares gf
+JOIN empleados em ON gf.empleado_id = em.empleado_dni
+JOIN grupo_familiares_personas gpf ON gf.grupo_familiar_id = gpf.grupo_familiar_id
+JOIN parentezcos par ON gpf.parentezco_id = par.parentezco_id
+JOIN personas per ON gpf.persona_id = per.persona_id
+    WHERE em.empleado_dni = '23156789';
 
 /*
 4. Listar el recibo de sueldo generado del empleado con DNI 23156789, de la liquidación N°
@@ -115,14 +126,16 @@ SELECT
     det.precio_unitario as detalle_precio_producto,
     prod.descripcion as producto_descripcion,
     fcb.bruto_factura,
-    ROUND(SUM(det.total_linea), 2) as factura_neto_total,
-    ROUND(SUM(det.total_linea * 0.21)) as factura_iva,
+    fcb.factura_neto_total,
+    fcb.factura_iva,
     fac.razon_social
 FROM vw_facturas fac
 JOIN (
     SELECT 
     d.factura_id,
-    ROUND(SUM(d.cantidad * d.precio_unitario),2) as bruto_factura
+    ROUND(SUM(d.cantidad * d.precio_unitario),2) as bruto_factura,
+    ROUND(SUM(d.total_linea), 2) as factura_neto_total,
+    ROUND(SUM(d.total_linea * 0.21)) as factura_iva
     FROM detalle_facturas d
     GROUP BY d.factura_id
     HAVING (SUM(d.cantidad * d.precio_unitario) > 150000)
@@ -130,7 +143,7 @@ JOIN (
 JOIN detalle_facturas det ON fac.factura_id = det.factura_id
 JOIN productos prod ON det.producto_id = prod.producto_id
 GROUP BY fac.numero_factura, fac.fecha_factura, det.cantidad, det.precio_unitario,
- prod.descripcion, fcb.bruto_factura, fac.razon_social
+ prod.descripcion, fcb.bruto_factura, fcb.factura_neto_total, fcb.factura_iva, fac.razon_social
  ORDER BY fac.numero_factura;
 
 
@@ -144,8 +157,20 @@ CION DEL ARTICULO, STOCK, NOMBRE DEL DEPOSITO, COSTO UNITARIO y
  */
  SELECT
     prod.producto_id,
-    prod.descripcion as producto_descripcion,
-    st.cantidad as stock_producto_almacen,
-    prod.precio_unitario as precio_producto,
-    ROUND((st.cantidad * prod.precio_unitario),2) as valoracion_producto_deposito,
-    SUM()
+    prod.descripcion AS producto_descripcion,
+    st.cantidad AS stock_producto_almacen,
+    prod.precio_unitario AS precio_producto,
+    alm.nombre AS nombre_almacen,
+    ROUND((st.cantidad * prod.precio_unitario), 2) AS valoracion_producto_deposito,
+    (
+        SELECT ROUND(SUM(st2.cantidad * prod2.precio_unitario), 2)
+        FROM stocks st2
+        JOIN productos prod2 ON st2.producto_id = prod2.producto_id
+        WHERE st2.almacen_id = st.almacen_id
+            AND st2.producto_id BETWEEN 1 AND 1100
+    ) AS valoracion_total_almacen
+FROM stocks st
+JOIN productos prod ON st.producto_id = prod.producto_id
+JOIN almacenes alm ON st.almacen_id = alm.almacen_id
+WHERE st.producto_id BETWEEN 1 AND 1100
+ORDER BY alm.nombre;

@@ -243,12 +243,13 @@ INSERT INTO facturas (cliente_id, empleado_id, sucursal_id, fecha_factura, tipo_
 (4, 4, 3, '2024-02-15', 'B', 2004, 4, 8900.00),
 (5, 5, 4, '2024-03-05', 'A', 2005, 2, 6250.00);
 
-INSERT INTO detalle_facturas (factura_id, producto_id, cantidad, precio_unitario) VALUES
-(1, 1, 1, 45000.00),
-(2, 2, 5, 1040.00),
-(3, 3, 80, 250.00),
-(4, 4, 1, 8900.00),
-(5, 5, 5, 1250.00);
+INSERT INTO detalle_facturas (factura_id, producto_id, cantidad, descuento, impuesto, precio_unitario) VALUES
+(1, 1, 1, 15, 0, 45000.00),
+(1, 3, 3, 15, 0, 15000.00),
+(2, 2, 5, 0, 0, 1040.00),
+(3, 3, 80, 0, 35, 250.00),
+(4, 4, 1, 25, 30, 8900.00),
+(5, 5, 5, 10, 0, 1250.00);
 
 INSERT INTO remitos_clientes (factura_id, cliente_id, fecha_remito) VALUES
 (1, 1, '2024-01-21'),
