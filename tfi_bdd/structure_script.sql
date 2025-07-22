@@ -172,23 +172,8 @@ create table clientes (
 	cuil varchar (15),
 	email varchar(50),
 	telefono varchar(20),
-	direccion_id int,
-	
-	-- Definimos referencias
-	foreign key(direccion_id) references direcciones(direccion_id),
-	
-	-- Creamos created_at y updated_at
-	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-create table proveedores (
-	-- Creamos atributos
-	proveedor_id int primary key auto_increment,
-	razon_social varchar(50) not null,
-	cuit varchar (15),
-	email varchar(50),
-	telefono varchar(20),
+	fecha_alta DATE,
+	credito decimal(12,2) default 0.00,
 	direccion_id int,
 	
 	-- Definimos referencias
@@ -208,6 +193,26 @@ create table rubros (
 	-- Definimos referencias
 	-- SIN REFERENCIAS
 	
+	-- Creamos created_at y updated_at
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+create table proveedores (
+	-- Creamos atributos
+	proveedor_id int primary key auto_increment,
+	razon_social varchar(50) not null,
+	cuit varchar (15),
+	email varchar(50),
+	telefono varchar(20),
+	direccion_id int,
+	fecha_alta DATE,
+	credito int,
+	rubro_id int,
+	
+	-- Definimos referencias
+	foreign key(direccion_id) references direcciones(direccion_id),
+	foreign key (rubro_id) references rubros(rubro_id),
 	-- Creamos created_at y updated_at
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -357,7 +362,7 @@ create table estados_compras (
 create table condiciones_pagos (
 	-- Creamos atributos
 	condicion_pago_id int primary key auto_increment,
-	condicion_pago varchar(20) not null,
+	condicion_pago varchar(50) not null,
 	
 	-- Definimos referencias
 	
@@ -528,7 +533,7 @@ create table estado_cotizaciones (
 create table condiciones_pago_cotizaciones (
 	-- Creamos atributos
 	condicion_pago_id int primary key auto_increment,
-	condicion_pago varchar(20) not null,
+	condicion_pago varchar(50) not null,
 	
 	-- Definimos referencias
 	
@@ -626,6 +631,7 @@ create table facturas (
 	numero_factura int,
 	estado_id int,
 	total decimal(12,2),
+	condicion_pago_id int,
 
 	CHECK(numero_factura > 0 OR numero_factura IS NULL),
 	CHECK(total > 0 OR total IS NULL),
@@ -635,7 +641,7 @@ create table facturas (
 	foreign key(empleado_id) references empleados(empleado_id),
 	foreign key(sucursal_id) references sucursales(sucursal_id),
 	foreign key(estado_id) references estado_facturas(estado_id),
-	
+	foreign key (condicion_pago_id) references condiciones_pagos(condicion_pago_id),
 	-- Creamos created_at y updated_at
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -1075,5 +1081,37 @@ create table detalle_liquidaciones (
 	
 	-- Creamos created_at y updated_at
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Relación cliente ↔ rubro
+create table cliente_rubro (
+	-- Creamos atributos
+    cliente_id int not null,
+    rubro_id int not null,
+    primary key (cliente_id, rubro_id),
+	
+	-- Definimos referencias
+    foreign key (cliente_id) references clientes(cliente_id),
+    foreign key (rubro_id) references rubros(rubro_id),
+	
+	-- Creamos created_at y updated_at
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Ranking del cliente
+create table ranking_cliente (
+	-- Creamos atributos
+    cliente_id int primary key,
+    ranking int check (ranking between 1 and 5),
+    comentarios varchar(100),
+    fecha_ranking date,
+
+	-- Definimos referencias
+    foreign key (cliente_id) references clientes(cliente_id),
+	
+	-- Creamos created_at y updated_at
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

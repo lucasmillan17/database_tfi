@@ -6,18 +6,19 @@ INSERT INTO paises (pais_id, nombre) VALUES
 (5, 'Paraguay');
 
 INSERT INTO provincias (provincia_id, pais_id, nombre) VALUES
-(1, 1, 'Buenos Aires'),
+(1, 1, 'Tucuman'),
 (2, 1, 'Córdoba'),
 (3, 2, 'São Paulo'),
 (4, 3, 'Santiago'),
 (5, 4, 'Montevideo');
 
 INSERT INTO ciudades (ciudad_id, provincia_id, nombre) VALUES
-(1, 1, 'La Plata'),
+(1, 1, 'S.M. de Tucuman'),
 (2, 2, 'Villa Carlos Paz'),
 (3, 3, 'Campinas'),
 (4, 4, 'Maipú'),
-(5, 5, 'Las Piedras');
+(5, 5, 'Las Piedras'),
+(6, 1, 'Yerba Buena');
 
 INSERT INTO codigos_postales (codigo_postal_id, ciudad_id, codigo) VALUES
 (1, 1, 1900),
@@ -41,8 +42,8 @@ INSERT INTO tipo_departamentos (nombre, descripcion) VALUES
 ('RRHH', 'Recursos Humanos y personal');
 
 INSERT INTO sucursales (nombre, direccion_id) VALUES
-('Casa Central', 1),
-('Sucursal Norte', 2),
+('Centro', 1),
+('Yerba Buena', 2),
 ('Sucursal Sur', 3),
 ('Sucursal Este', 4),
 ('Sucursal Oeste', 5);
@@ -68,32 +69,32 @@ INSERT INTO empleados (nombre, apellido, dni, cuil, fecha_nacimiento, fecha_alta
 ('Julián', 'Fernández', 34789012, 20347890124, '1992-09-12', '2019-06-20', 'julian.fernandez@empresa.com', 381321654, 1, 4, 3, 4),
 ('Carla', 'Martínez', 35890123, 20358901235, '1985-12-30', '2018-04-15', 'carla.martinez@empresa.com', 381789123, 1, 5, 4, 5);
 
-INSERT INTO clientes (razon_social, cuil, email, telefono, direccion_id) VALUES
-('Distribuidora del Sur S.A.', '30-12345678-9', 'contacto@delsur.com', '1123456789', 1),
-('Ferretería El Tornillo', '30-23456789-0', 'ventas@eltornillo.com', '1134567890', 2),
-('Supermercado Central', '30-34567890-1', 'compras@supercentral.com', '1145678901', 3),
-('Hotel Patagonia', '30-45678901-2', 'recepcion@hotelpatagonia.com', '1156789012', 4),
-('Farmacia Vida', '30-56789012-3', 'info@farmaciavida.com', '1167890123', 5);
-
-INSERT INTO proveedores (razon_social, cuit, email, telefono, direccion_id) VALUES
-('Proveedora Industrial S.A.', '30-11111111-1', 'info@proveedora.com', '1122233344', 1),
-('Importadora Global', '30-22222222-2', 'ventas@importglobal.com', '1133344455', 2),
-('Papelera Norte', '30-33333333-3', 'pedidos@papeleranorte.com', '1144455566', 3),
-('Textiles del Este', '30-44444444-4', 'textiles@este.com', '1155566677', 4),
-('Químicos Andinos', '30-55555555-5', 'quimicos@andinos.com', '1166677788', 5);
+INSERT INTO clientes (razon_social, cuil, email, telefono, fecha_alta, direccion_id) VALUES
+('Distribuidora del Sur S.A.', '30-12345678-9', 'contacto@delsur.com', '1123456789', '2021-03-05', 1),
+('Ferretería El Tornillo', '30-23456789-0', 'ventas@eltornillo.com', '1134567890', '2020-03-05', 2),
+('Supermercado Central', '30-34567890-1', 'compras@supercentral.com', '1145678901', '2023-02-08', 3),
+('Hotel Patagonia', '30-45678901-2', 'recepcion@hotelpatagonia.com', '1156789012', '2025-01-01', 4),
+('Farmacia Vida', '30-56789012-3', 'info@farmaciavida.com', '1167890123', '2023-10-20', 5);
 
 INSERT INTO rubros (nombre, descripcion) VALUES
-('Oficina', 'Materiales y muebles de oficina'),
-('Limpieza', 'Productos de higiene y limpieza'),
-('Alimentos', 'Productos comestibles y bebidas'),
-('Textiles', 'Ropa y telas para fabricación'),
+('Cementos', 'Materiales para hacer cemento'),
+('Pegamentos', 'Productos para pegar'),
+('Electricidad', 'Productos para instalaciones electricas'),
+('Caños para agua', 'Caños plastico comun o termofusion'),
 ('Herramientas', 'Equipamiento de trabajo y herramientas');
 
+INSERT INTO proveedores (razon_social, cuit, email, telefono, direccion_id,fecha_alta, credito, rubro_id) VALUES
+('Proveedora Industrial S.A.', '30-11111111-1', 'info@proveedora.com', '1122233344', 1, '2021-03-05', 1500000, 4),
+('Importadora Global', '30-22222222-2', 'ventas@importglobal.com', '1133344455', 2, '2021-03-05', 1000000, 3),
+('Papelera Norte', '30-33333333-3', 'pedidos@papeleranorte.com', '1144455566', 3, '2023-02-08', 500000, 2),
+('Textiles del Este', '30-44444444-4', 'textiles@este.com', '1155566677', 4, '2025-01-01', 200000, 1),
+('Químicos Andinos', '30-55555555-5', 'quimicos@andinos.com', '1166677788', 5, '2023-10-20', 2000000, 5);
+
 INSERT INTO categoria_productos (nombre, descripcion) VALUES
-('Muebles', 'Sillas, escritorios, estanterías'),
-('Papelería', 'Resmas, sobres, carpetas'),
-('Bebidas', 'Agua, gaseosas, jugos'),
-('Ropa laboral', 'Uniformes, guantes, botas'),
+('Materiales', 'Porla, Cemento rapido'),
+('Pegamentos', 'Adhesivos de pared, Adhesivos de piso'),
+('Productos', 'Llaves, cables, portalamparas'),
+('Caño', 'Caño termofusor, plastico'),
 ('Herramientas manuales', 'Martillos, destornilladores, llaves');
 
 INSERT INTO unidades_medida (unidad) VALUES
@@ -104,16 +105,16 @@ INSERT INTO unidades_medida (unidad) VALUES
 ('ml');
 
 INSERT INTO productos (rubro_id, categoria_id, nombre, descripcion, unidad_medida_id, codigo_barra, precio_unitario) VALUES
-(1, 1, 'Escritorio Ejecutivo', 'Mueble de oficina con cajonera', 3, '779812345001', 35000.00),
-(1, 2, 'Resma A4', 'Papel tamaño A4 500 hojas', 3, '779812345002', 1200.00),
-(2, 3, 'Botella de Agua 1.5L', 'Agua mineral sin gas', 2, '779812345003', 250.00),
-(4, 4, 'Pantalón de trabajo', 'Ropa resistente para fábrica', 3, '779812345004', 7800.00),
+(1, 1, 'Cemento Rápido', 'Bolsa de cemento de fraguado rápido', 3, '779812345006', 2000.00),
+(2, 2, 'Pegamento Epoxi', 'Adhesivo de alta resistencia', 3, '779812345007', 1500.00),
+(3, 3, 'Toma corriente', 'Dispositivo eléctrico de conexión', 3, '779812345008', 800.00),
+(4, 4, 'Angulo 90', 'Caño de angulo 90 rojo', 3, '779812345004', 7800.00),
 (5, 5, 'Destornillador Philips', 'Herramienta manual estándar', 3, '779812345005', 950.00);
 
 INSERT INTO producto_proveedor (producto_id, proveedor_id, precio_compra, fecha_alta) VALUES
-(1, 1, 30000.00, '2023-01-01'),
-(2, 1, 1000.00, '2023-01-15'),
-(3, 2, 180.00, '2023-02-10'),
+(1, 1, 1800.00, '2024-01-01'),
+(2, 2, 1200.00, '2024-01-10'),
+(3, 3, 600.00, '2024-01-15'),
 (4, 4, 6400.00, '2023-03-05'),
 (5, 5, 700.00, '2023-04-20');
 
@@ -125,9 +126,9 @@ INSERT INTO almacenes (sucursal_id, nombre, direccion_id) VALUES
 (5, 'Almacén Oeste', 5);
 
 INSERT INTO stocks (producto_id, almacen_id, cantidad, stock_minimo, stock_maximo) VALUES
-(1, 1, 10, 2, 20),
-(2, 1, 50, 10, 100),
-(3, 2, 100, 20, 200),
+(1, 1, 1200, 100, 1500),
+(2, 2, 2000, 200, 3000),
+(3, 3, 1300, 150, 2500),
 (4, 3, 15, 5, 30),
 (5, 4, 30, 10, 50);
 
@@ -142,8 +143,8 @@ INSERT INTO condiciones_pagos (condicion_pago) VALUES
 ('Contado'),
 ('30 días'),
 ('60 días'),
-('Transferencia'),
-('Cheque diferido');
+('Tarjeta de credito Visa'),
+('Cheque electronico');
 
 INSERT INTO orden_compras (proveedor_id, empleado_id, sucursal_id, departamento_id, fecha_orden, estado_id, total, condicion_pago_id) VALUES
 (1, 1, 1, 1, '2024-01-10', 1, 35000.00, 1),
@@ -153,7 +154,7 @@ INSERT INTO orden_compras (proveedor_id, empleado_id, sucursal_id, departamento_
 (5, 5, 4, 5, '2024-03-05', 5, 4750.00, 5);
 
 INSERT INTO detalle_orden_compras (orden_compra_id, producto_id, cantidad, precio_unitario) VALUES
-(1, 1, 1, 35000.00),
+(1, 1, 100, 500.00),
 (2, 2, 5, 1000.00),
 (3, 3, 100, 180.00),
 (4, 4, 1, 7800.00),
@@ -167,15 +168,15 @@ INSERT INTO estado_remitos (estado) VALUES
 ('Anulado');
 
 INSERT INTO remitos (proveedor_id, sucursal_id, orden_compra_id, fecha_remito, estado_id) VALUES
-(1, 1, 1, '2024-01-15', 3),
-(2, 1, 2, '2024-01-20', 1),
+(1, 1, 1, '2024-01-15', 1),
+(2, 1, 1, '2024-01-20', 1),
 (3, 2, 3, '2024-02-03', 2),
 (4, 3, 4, '2024-02-18', 3),
 (5, 4, 5, '2024-03-07', 4);
 
 INSERT INTO detalle_remitos (remito_id, producto_id, cantidad) VALUES
-(1, 1, 1),
-(2, 2, 5),
+(1, 1, 60),
+(2, 1, 20),
 (3, 3, 100),
 (4, 4, 1),
 (5, 5, 5);
@@ -236,12 +237,12 @@ INSERT INTO estado_facturas (estado) VALUES
 ('Vencida'),
 ('Cancelada');
 
-INSERT INTO facturas (cliente_id, empleado_id, sucursal_id, fecha_factura, tipo_factura, numero_factura, estado_id, total) VALUES
-(1, 1, 1, '2024-01-20', 'A', 2001, 2, 45000.00),
-(2, 2, 1, '2024-01-25', 'B', 2002, 1, 5200.00),
-(3, 3, 2, '2024-02-10', 'A', 2003, 3, 20000.00),
-(4, 4, 3, '2024-02-15', 'B', 2004, 4, 8900.00),
-(5, 5, 4, '2024-03-05', 'A', 2005, 2, 6250.00);
+INSERT INTO facturas (cliente_id, empleado_id, sucursal_id, fecha_factura, tipo_factura, numero_factura, estado_id, total, condicion_pago_id) VALUES
+(1, 1, 1, '2025-06-20', 'A', 2001, 2, 45000.00, 4),
+(2, 2, 1, '2024-01-25', 'B', 2002, 1, 5200.00, 4),
+(3, 3, 2, '2024-02-10', 'A', 2003, 3, 20000.00, 3),
+(4, 4, 3, '2025-07-15', 'B', 2004, 4, 8900.00, 1),
+(5, 5, 4, '2024-03-05', 'A', 2005, 2, 6250.00, 2);
 
 INSERT INTO detalle_facturas (factura_id, producto_id, cantidad, descuento, impuesto, precio_unitario) VALUES
 (1, 1, 1, 15, 0, 45000.00),
@@ -449,3 +450,10 @@ VALUES
 (3, 3, '2024-03-01', NULL, NULL),
 (4, 1, '2024-03-20', '2024-04-20', 90),
 (5, 2, '2024-04-01', '2024-04-30', 92);
+
+INSERT INTO cliente_rubro (cliente_id, rubro_id) VALUES
+(1, 4),
+(2, 5),
+(3, 1),
+(4, 2),
+(5, 3);

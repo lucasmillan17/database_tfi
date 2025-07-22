@@ -143,7 +143,32 @@ JOIN parametros_medicos pm ON rev.revision_id = pm.revision_id
 JOIN unidades_medicas un ON pm.unidad_id = un.unidad_id
 JOIN empleados em ON rev.empleado_id = em.empleado_id;
 
+<<<<<<< HEAD
 CREATE VIEW vw_personas AS
 SELECT per.*, dir.direccion_completa
 FROM personas per
 JOIN vw_direcciones dir ON per.direccion_id = dir.direccion_id;
+=======
+CREATE VIEW vw_clientes AS
+SELECT
+    cl.cliente_id,
+    cl.cuil,
+    cl.razon_social,
+    cl.telefono,
+    cl.email,
+    cl.credito,
+    cl.fecha_alta,
+    dir.ciudad,
+    dir.provincia,
+    dir.pais,
+    dir.direccion_completa,
+    ru.nombre AS rubro,
+    rk.ranking,
+    rk.comentarios,
+    rk.fecha_ranking
+FROM clientes cl
+JOIN vw_direcciones dir ON cl.direccion_id = dir.direccion_id
+JOIN cliente_rubro cr ON cl.cliente_id = cr.cliente_id
+JOIN rubros ru ON cr.rubro_id = ru.rubro_id
+LEFT JOIN ranking_cliente rk ON cl.cliente_id = rk.cliente_id;
+>>>>>>> c6c5395 (Mis cambios antes del rebase)
