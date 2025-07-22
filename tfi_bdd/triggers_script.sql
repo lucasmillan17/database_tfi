@@ -40,7 +40,11 @@ CREATE TRIGGER actualizar_total_factura_delete
 AFTER DELETE ON detalle_facturas
 FOR EACH ROW
 BEGIN
+<<<<<<< HEAD
     UPDATE facturas
+=======
+    UPDATE facturas 
+>>>>>>> c6c5395 (Mis cambios antes del rebase)
     SET total = (
         SELECT SUM(total_linea)
         FROM detalle_facturas
