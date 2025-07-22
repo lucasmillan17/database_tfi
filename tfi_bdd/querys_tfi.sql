@@ -13,7 +13,7 @@ SELECT
     departamento, 
     fecha_alta 
     FROM vw_empleados 
-    WHERE (DATE(fecha_alta) > '2021-01-01') AND (ciudad = 'San Miguel de Tucuman') AND (departamento='VENTAS');
+    WHERE (DATE(fecha_alta) > '2021-01-01') AND (ciudad = 'S.M. de Tucuman') AND (departamento LIKE '%Ventas%');
 
 /*
  2. Listar el libro único de haberes por número de liquidación generada, para la liquidación N°
@@ -272,24 +272,33 @@ mostrar: N° FACTURA, FECHA DE COMPRA, BRUTO TOTAL, NETO TOTAL,
 IVA, CANT COMPRADA, PRECIO UNITARIO, DESCRIPCION, RAZON_SOCIAL
 DEL PROVEEDOR.
 */
--- Tiene fallas hay que corregir
-SELECT 
-    fc.numero_factura AS nro_factura,
-    fc.fecha_factura,
-    SUM(dfc.cantidad * dfc.precio_unitario) AS bruto_total,
-    fc.total AS neto_total,
-    -- Aqui le puse que se calcula el iva asi, para no agregar nada, eso si, si hay algun otro descuento o algo hay que modificar
-    (SUM(dfc.cantidad * dfc.precio_unitario) - fc.total) AS iva,
-    dfc.cantidad,
-    dfc.precio_unitario,
-    p.nombre AS descripcion,
-    pr.razon_social
-FROM facturas_compras fc
-JOIN detalle_facturas_compras dfc ON fc.factura_compra_id = dfc.factura_compra_id
-JOIN productos p ON dfc.producto_id = p.producto_id
-JOIN proveedores pr ON fc.proveedor_id = pr.proveedor_id
-GROUP BY fc.factura_compra_id
-HAVING bruto_total > 150000;
+A CORREGIR
+SELECT
+    fac.numero_factura as N°_factura,
+    fac.fecha_factura as fecha_compra,
+    det.cantidad as detalle_cantidad,
+    det.precio_unitario as detalle_precio_producto,
+    prod.descripcion as producto_descripcion,
+    fcb.bruto_factura,
+    fcb.factura_neto_total,
+    fcb.factura_iva,
+    fac.razon_social
+FROM vw_facturas fac
+JOIN (
+    SELECT 
+    d.factura_id,
+    ROUND(SUM(d.cantidad * d.precio_unitario),2) as bruto_factura,
+    ROUND(SUM(d.total_linea), 2) as factura_neto_total,
+    ROUND(SUM(d.total_linea * 0.21)) as factura_iva
+    FROM detalle_facturas d
+    GROUP BY d.factura_id
+    HAVING (SUM(d.cantidad * d.precio_unitario) > 150000)
+) AS fcb ON fac.factura_id = fcb.factura_id
+JOIN detalle_facturas det ON fac.factura_id = det.factura_id
+JOIN productos prod ON det.producto_id = prod.producto_id
+GROUP BY fac.numero_factura, fac.fecha_factura, det.cantidad, det.precio_unitario,
+ prod.descripcion, fcb.bruto_factura, fcb.factura_neto_total, fcb.factura_iva, fac.razon_social
+ ORDER BY fac.numero_factura;
 
 /*
 24. Listar los artículos que tienen Stock mayor a 1000 de los rubros cementos, pegamentos
