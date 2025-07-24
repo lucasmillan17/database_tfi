@@ -246,5 +246,5 @@ INSERT INTO liquidaciones_sueldo (liquidacion_id, empleado_id, codigo, periodo, 
 
 -- === DETALLE LIQUIDACIÓN ===
 INSERT INTO detalle_liquidaciones (detalle_liquidacion_id, liquidacion_id, concepto_id, cantidad, monto_unitario) VALUES 
-(7, 7, 7, 1, 100000.00),
+(7, 7, 1, 1, 100000.00),
 (8, 7, 1, 1, 17000.00);
