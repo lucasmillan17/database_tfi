@@ -27,15 +27,15 @@ SELECT * FROM libro_haberes WHERE periodo = 202301 ORDER BY (liquidacion_nro);
 SELECT 
     gf.grupo_familiar_id,
     gf.descripcion,
-    em.empleado_dni,
+    em.dni as empleado_dni,
     par.parentezco,
     per.*
 FROM grupo_familiares gf
-JOIN empleados em ON gf.empleado_id = em.empleado_dni
+JOIN empleados em ON gf.empleado_id = em.empleado_id
 JOIN grupo_familiares_personas gpf ON gf.grupo_familiar_id = gpf.grupo_familiar_id
 JOIN parentezcos par ON gpf.parentezco_id = par.parentezco_id
 JOIN personas per ON gpf.persona_id = per.persona_id
-    WHERE em.empleado_dni = '23156789';
+    WHERE em.dni = '23156789';
 
 /*
 4. Listar el recibo de sueldo generado del empleado con DNI 23156789, de la liquidación N°
@@ -106,13 +106,13 @@ LIMIT 1;
 SELECT 
 rev.empleado_id,
 rev.nombre_empleado,
-em.edad,
+TIMESTAMPDIFF(YEAR, em.fecha_nacimiento, CURDATE()) AS edad,
 ROUND(AVG(rev.valor),2) AS promedio_peso
 FROM vw_revisiones_medicas rev
 JOIN empleados em ON rev.empleado_id = em.empleado_id
 WHERE rev.parametro_medico = 'Peso'
  AND rev.fecha_revision >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
-GROUP BY rev.empleado_id, rev.nombre_empleado, em.edad;
+GROUP BY rev.empleado_id, rev.nombre_empleado, edad;
 
 /*
 11. Listar todos los clientes con fecha de alta posterior 01/01/2021, de la provincia de Tucumán
@@ -160,7 +160,6 @@ WHERE suc.nombre = 'Centro'
 16. Mostrar los detalles de las entregas de mercadería de un número de factura de venta en
 particular.
 */
---No devuelve nada
 SELECT 
     f.numero_factura,
     rc.remito_cliente_id,
@@ -172,7 +171,7 @@ FROM facturas f
 JOIN remitos_clientes rc ON f.factura_id = rc.factura_id
 JOIN detalle_remitos_clientes drc ON rc.remito_cliente_id = drc.remito_cliente_id
 JOIN productos p ON drc.producto_id = p.producto_id
-WHERE f.numero_factura = 1;
+WHERE f.numero_factura = 2001;
 
 /*
 17. Obtener la cantidad total de un artículo vendido en todas las facturas de ventas.
@@ -272,7 +271,6 @@ mostrar: N° FACTURA, FECHA DE COMPRA, BRUTO TOTAL, NETO TOTAL,
 IVA, CANT COMPRADA, PRECIO UNITARIO, DESCRIPCION, RAZON_SOCIAL
 DEL PROVEEDOR.
 */
-A CORREGIR
 SELECT
     fac.numero_factura as N°_factura,
     fac.fecha_factura as fecha_compra,
@@ -329,6 +327,25 @@ general de la valoración de todos los depósitos. Se debe mostrar: CODIGO, DESC
 DEL ARTICULO. STOCK, NOMBRE DEL DEPOSITO, COSTO UNITARIO y
 VALORACION.
 */
+SELECT
+    prod.producto_id,
+    prod.descripcion AS producto_descripcion,
+    st.cantidad AS stock_producto_almacen,
+    prod.precio_unitario AS precio_producto,
+    alm.nombre AS nombre_almacen,
+    ROUND((st.cantidad * prod.precio_unitario), 2) AS valoracion_producto_deposito,
+    (
+        SELECT ROUND(SUM(st2.cantidad * prod2.precio_unitario), 2)
+        FROM stocks st2
+        JOIN productos prod2 ON st2.producto_id = prod2.producto_id
+        WHERE st2.almacen_id = st.almacen_id
+            AND st2.producto_id BETWEEN 1 AND 1100
+    ) AS valoracion_total_almacen
+FROM stocks st
+JOIN productos prod ON st.producto_id = prod.producto_id
+JOIN almacenes alm ON st.almacen_id = alm.almacen_id
+WHERE st.producto_id BETWEEN 1 AND 1100
+ORDER BY alm.nombre;
 
 /*
 26. Listar el importe total comprado entre el 1-ene-2024 y el 31-dic-2024, agrupado por el

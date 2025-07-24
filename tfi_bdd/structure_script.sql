@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS tfi_bdd;
 USE tfi_bdd;
 
-create table paises (
+CREATE TABLE IF NOT EXISTS paises (
 	-- Creamos atributos
 	pais_id int primary key AUTO_INCREMENT unique,
 	nombre varchar(50) not null,
@@ -11,7 +11,7 @@ create table paises (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table provincias (
+CREATE TABLE IF NOT EXISTS provincias (
 	-- Creamos atributos
 	provincia_id int primary key AUTO_INCREMENT,
 	pais_id int not null,
@@ -25,7 +25,7 @@ create table provincias (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table ciudades (
+CREATE TABLE IF NOT EXISTS ciudades (
 	-- Creamos atributos
 	ciudad_id int primary key AUTO_INCREMENT,
 	provincia_id int not null,
@@ -39,7 +39,7 @@ create table ciudades (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table codigos_postales (
+CREATE TABLE IF NOT EXISTS codigos_postales (
 	-- Creamos atributos
 	codigo_postal_id int primary key AUTO_INCREMENT,
 	ciudad_id int not null,
@@ -53,7 +53,7 @@ create table codigos_postales (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table direcciones (
+CREATE TABLE IF NOT EXISTS direcciones (
 	-- Creamos atributos
 	direccion_id int primary key AUTO_INCREMENT,
 	calle varchar(50) not null,
@@ -80,7 +80,7 @@ create table direcciones (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table tipo_departamentos (
+CREATE TABLE IF NOT EXISTS tipo_departamentos (
 	-- Creamos atributos
 	tipo_departamento_id int primary key AUTO_INCREMENT,
 	nombre varchar(50) not null,
@@ -94,7 +94,7 @@ create table tipo_departamentos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table sucursales (
+CREATE TABLE IF NOT EXISTS sucursales (
 	-- Creamos atributos
 	sucursal_id int primary key AUTO_INCREMENT,
 	nombre varchar(50) not null,
@@ -108,7 +108,7 @@ create table sucursales (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table departamentos (
+CREATE TABLE IF NOT EXISTS departamentos (
 	-- Creamos atributos
 	departamento_id int primary key AUTO_INCREMENT,
 	sucursal_id int,
@@ -124,7 +124,7 @@ create table departamentos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table tipo_empleados (
+CREATE TABLE IF NOT EXISTS tipo_empleados (
 	-- Creamos atributos
 	tipo_empleado_id int primary key AUTO_INCREMENT,
 	nombre varchar(50) not null,
@@ -138,13 +138,13 @@ create table tipo_empleados (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table empleados (
+CREATE TABLE IF NOT EXISTS empleados (
 	-- Creamos atributos
 	empleado_id int primary key AUTO_INCREMENT,
 	nombre varchar(50) not null,
 	apellido varchar(50) not null,
-	dni varchar (15),
-	cuil varchar(15),
+	dni varchar (15) UNIQUE,
+	cuil varchar(15) UNIQUE,
 	fecha_nacimiento datetime,
 	fecha_alta datetime,
 	email varchar(75),
@@ -153,6 +153,8 @@ create table empleados (
 	departamento_id int,
 	sucursal_id int,
 	direccion_id int,
+	-- Definimos un indice en fecha_alta 
+	INDEX idx_fecha_alta (fecha_alta),
 	
 	-- Definimos referencias
 	foreign key(tipo_empleado_id) references tipo_empleados(tipo_empleado_id),
@@ -165,7 +167,7 @@ create table empleados (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table clientes (
+CREATE TABLE IF NOT EXISTS clientes (
 	-- Creamos atributos
 	cliente_id int primary key auto_increment,
 	razon_social varchar(50) not null,
@@ -176,6 +178,9 @@ create table clientes (
 	credito decimal(12,2) default 0.00,
 	direccion_id int,
 	
+	-- Definimos un indice en fecha_alta 
+	INDEX idx_fecha_alta (fecha_alta),
+
 	-- Definimos referencias
 	foreign key(direccion_id) references direcciones(direccion_id),
 	
@@ -184,7 +189,7 @@ create table clientes (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table rubros (
+CREATE TABLE IF NOT EXISTS rubros (
 	-- Creamos atributos
 	rubro_id int primary key auto_increment,
 	nombre varchar(50) not null,
@@ -198,11 +203,11 @@ create table rubros (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table proveedores (
+CREATE TABLE IF NOT EXISTS proveedores (
 	-- Creamos atributos
 	proveedor_id int primary key auto_increment,
 	razon_social varchar(50) not null,
-	cuit varchar (15),
+	cuit varchar (15) UNIQUE,
 	email varchar(50),
 	telefono varchar(20),
 	direccion_id int,
@@ -210,6 +215,8 @@ create table proveedores (
 	credito int,
 	rubro_id int,
 	
+	-- Definimos un indice en fecha_alta 
+	INDEX idx_fecha_alta (fecha_alta),
 	-- Definimos referencias
 	foreign key(direccion_id) references direcciones(direccion_id),
 	foreign key (rubro_id) references rubros(rubro_id),
@@ -218,7 +225,7 @@ create table proveedores (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table categoria_productos (
+CREATE TABLE IF NOT EXISTS categoria_productos (
 	-- Creamos atributos
 	categoria_id int primary key auto_increment,
 	nombre varchar(50) not null,
@@ -232,7 +239,7 @@ create table categoria_productos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table unidades_medida (
+CREATE TABLE IF NOT EXISTS unidades_medida (
 	-- Creamos atributos
 	unidad_medida_id int primary key auto_increment,
 	unidad varchar(10),
@@ -245,7 +252,7 @@ create table unidades_medida (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table productos (
+CREATE TABLE IF NOT EXISTS productos (
 	-- Creamos atributos
 	producto_id int primary key auto_increment,
 	rubro_id int,
@@ -268,12 +275,14 @@ create table productos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table producto_proveedor (
+CREATE TABLE IF NOT EXISTS producto_proveedor (
 	-- Creamos atributos
 	producto_id int not null,
 	proveedor_id int not null,
 	precio_compra decimal(12,2),
 	fecha_alta datetime,
+	-- Definimos un indice en fecha_alta 
+	INDEX idx_fecha_alta (fecha_alta),
 	
 	primary key(producto_id, proveedor_id),
 	CHECK(precio_compra > 0),
@@ -287,7 +296,7 @@ create table producto_proveedor (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table rankings (
+CREATE TABLE IF NOT EXISTS rankings (
 	-- Creamos atributos
 	rubro_id int not null,
 	proveedor_id int not null,
@@ -305,7 +314,7 @@ create table rankings (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table almacenes (
+CREATE TABLE IF NOT EXISTS almacenes (
 	-- Creamos atributos
 	almacen_id int primary key auto_increment,
 	sucursal_id int,
@@ -321,7 +330,7 @@ create table almacenes (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table stocks (
+CREATE TABLE IF NOT EXISTS stocks (
 	-- Creamos atributos
 	stock_id int primary key auto_increment,
 	producto_id int not null,
@@ -346,7 +355,7 @@ create table stocks (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table estados_compras (
+CREATE TABLE IF NOT EXISTS estados_compras (
 	-- Creamos atributos
 	estado_id int primary key auto_increment,
 	estado varchar(15) not null,
@@ -359,7 +368,7 @@ create table estados_compras (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table condiciones_pagos (
+CREATE TABLE IF NOT EXISTS condiciones_pagos (
 	-- Creamos atributos
 	condicion_pago_id int primary key auto_increment,
 	condicion_pago varchar(50) not null,
@@ -372,7 +381,7 @@ create table condiciones_pagos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table orden_compras (
+CREATE TABLE IF NOT EXISTS orden_compras (
 	-- Creamos atributos
 	orden_compra_id int primary key auto_increment,
 	proveedor_id int,
@@ -399,7 +408,7 @@ create table orden_compras (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_orden_compras (
+CREATE TABLE IF NOT EXISTS detalle_orden_compras (
 	-- Creamos atributos
 	detalle_orden_id int primary key auto_increment,
 	orden_compra_id int not null,
@@ -422,7 +431,7 @@ create table detalle_orden_compras (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table estado_remitos (
+CREATE TABLE IF NOT EXISTS estado_remitos (
 	-- Creamos atributos
 	estado_id int primary key auto_increment,
 	estado varchar(20) not null,
@@ -435,7 +444,7 @@ create table estado_remitos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table remitos (
+CREATE TABLE IF NOT EXISTS remitos (
 	-- Creamos atributos
 	remito_id int primary key auto_increment,
 	proveedor_id int,
@@ -455,7 +464,7 @@ create table remitos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_remitos (
+CREATE TABLE IF NOT EXISTS detalle_remitos (
 	-- Creamos atributos
 	detalle_remito_id int primary key auto_increment,
 	remito_id int not null,
@@ -473,18 +482,21 @@ create table detalle_remitos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table facturas_compras (
+CREATE TABLE IF NOT EXISTS facturas_compras (
 	-- Creamos atributos
 	factura_compra_id int primary key auto_increment,
 	orden_compra_id int,
 	proveedor_id int,
 	fecha_factura datetime not null,
 	tipo_factura char(1),
-	numero_factura int,
+	numero_factura int UNIQUE,
 	total decimal(12,2),
 
 	CHECK(total > 0 OR total IS NULL),
-	
+
+	-- Definimos un indice en fecha_factura
+	INDEX idx_fecha_factura (fecha_factura),
+
 	-- Definimos referencias
 	foreign key(orden_compra_id) references orden_compras(orden_compra_id),
 	foreign key(proveedor_id) references proveedores(proveedor_id),
@@ -494,7 +506,7 @@ create table facturas_compras (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_facturas_compras (
+CREATE TABLE IF NOT EXISTS detalle_facturas_compras (
 	-- Creamos atributos
 	detalle_factura_compra_id int primary key auto_increment,
 	factura_compra_id int not null,
@@ -517,7 +529,7 @@ create table detalle_facturas_compras (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table estado_cotizaciones (
+CREATE TABLE IF NOT EXISTS estado_cotizaciones (
 	-- Creamos atributos
 	estado_id int primary key auto_increment,
 	estado varchar(20) not null,
@@ -530,7 +542,7 @@ create table estado_cotizaciones (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table condiciones_pago_cotizaciones (
+CREATE TABLE IF NOT EXISTS condiciones_pago_cotizaciones (
 	-- Creamos atributos
 	condicion_pago_id int primary key auto_increment,
 	condicion_pago varchar(50) not null,
@@ -543,7 +555,7 @@ create table condiciones_pago_cotizaciones (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table cotizaciones (
+CREATE TABLE IF NOT EXISTS cotizaciones (
 	-- Creamos atributos
 	cotizacion_id int primary key auto_increment,
 	cliente_id int,
@@ -567,7 +579,7 @@ create table cotizaciones (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_cotizaciones (
+CREATE TABLE IF NOT EXISTS detalle_cotizaciones (
 	-- Creamos atributos
 	detalle_cotizacion_id int primary key auto_increment,
 	cotizacion_id int not null,
@@ -590,7 +602,7 @@ create table detalle_cotizaciones (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table cotizacion_orden (
+CREATE TABLE IF NOT EXISTS cotizacion_orden (
 	-- Creamos atributos
 	cotizacion_id int not null,
 	orden_compra_id int not null,
@@ -607,7 +619,7 @@ create table cotizacion_orden (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table estado_facturas (
+CREATE TABLE IF NOT EXISTS estado_facturas (
 	-- Creamos atributos
 	estado_id int primary key auto_increment,
 	estado varchar(20) not null,
@@ -620,7 +632,7 @@ create table estado_facturas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table facturas (
+CREATE TABLE IF NOT EXISTS facturas (
 	-- Creamos atributos
 	factura_id int primary key auto_increment,
 	cliente_id int,
@@ -628,7 +640,7 @@ create table facturas (
 	sucursal_id int,
 	fecha_factura datetime not null,
 	tipo_factura char(1) not null,
-	numero_factura int,
+	numero_factura int UNIQUE,
 	estado_id int,
 	total decimal(12,2),
 	condicion_pago_id int,
@@ -636,6 +648,9 @@ create table facturas (
 	CHECK(numero_factura > 0 OR numero_factura IS NULL),
 	CHECK(total > 0 OR total IS NULL),
 	
+	-- Definimos un indice en fecha_factura
+	INDEX idx_fecha_factura (fecha_factura),
+
 	-- Definimos referencias
 	foreign key(cliente_id) references clientes(cliente_id),
 	foreign key(empleado_id) references empleados(empleado_id),
@@ -647,7 +662,7 @@ create table facturas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_facturas (
+CREATE TABLE IF NOT EXISTS detalle_facturas (
 	-- Creamos atributos
 	detalle_factura_id int primary key auto_increment,
 	factura_id int not null,
@@ -655,6 +670,10 @@ create table detalle_facturas (
 	cantidad int not null,
 	descuento decimal(5,2),
 	impuesto decimal(5,2),
+
+	CHECK((descuento>=0 and descuento<=100) OR descuento IS NULL),
+	CHECK((impuesto>=0 and impuesto<=100) OR impuesto IS NULL),
+
 	precio_unitario decimal(10,2) not null,
 
 	 total_linea DECIMAL(10,2) 
@@ -675,7 +694,7 @@ create table detalle_facturas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table remitos_clientes (
+CREATE TABLE IF NOT EXISTS remitos_clientes (
 	-- Creamos atributos
 	remito_cliente_id int primary key auto_increment,
 	factura_id int,
@@ -691,7 +710,7 @@ create table remitos_clientes (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_remitos_clientes (
+CREATE TABLE IF NOT EXISTS detalle_remitos_clientes (
 	-- Creamos atributos
 	detalle_remito_cliente_id int primary key auto_increment,
 	remito_cliente_id int not null,
@@ -709,7 +728,7 @@ create table detalle_remitos_clientes (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table recibos (
+CREATE TABLE IF NOT EXISTS recibos (
 	-- Creamos atributos
 	recibo_id int primary key auto_increment,
 	cliente_id int,
@@ -728,7 +747,7 @@ create table recibos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_recibos (
+CREATE TABLE IF NOT EXISTS detalle_recibos (
 	-- Creamos atributos
 	detalle_recibo_id int primary key auto_increment,
 	recibo_id int not null,
@@ -746,7 +765,7 @@ create table detalle_recibos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table medios_pagos (
+CREATE TABLE IF NOT EXISTS medios_pagos (
 	-- Creamos atributos
 	medio_pago_id int primary key auto_increment,
 	nombre varchar(50),
@@ -760,7 +779,7 @@ create table medios_pagos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table pagos (
+CREATE TABLE IF NOT EXISTS pagos (
 	-- Creamos atributos
 	pago_id int primary key auto_increment,
 	recibo_id int not null,
@@ -771,6 +790,7 @@ create table pagos (
 
 	CHECK(monto > 0),
 	
+	
 	-- Definimos referencias
 	foreign key(recibo_id) references recibos(recibo_id),
 	foreign key(medio_pago_id) references medios_pagos(medio_pago_id),
@@ -780,12 +800,12 @@ create table pagos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table personas (
+CREATE TABLE IF NOT EXISTS personas (
 	-- Creamos atributos
 	persona_id int primary key auto_increment,
 	nombre varchar(50) not null,
 	apellido varchar(50) not null,
-	dni varchar (15),
+	dni varchar (15) UNIQUE,
 	fecha_nacimiento datetime,
 	sexo char(1),
 	email varchar(60),
@@ -800,7 +820,7 @@ create table personas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table grupo_familiares (
+CREATE TABLE IF NOT EXISTS grupo_familiares (
 	-- Creamos atributos
 	grupo_familiar_id int primary key auto_increment,
 	empleado_id int not null,
@@ -814,7 +834,7 @@ create table grupo_familiares (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table parentezcos (
+CREATE TABLE IF NOT EXISTS parentezcos (
 	-- Creamos atributos
 	parentezco_id int primary key auto_increment,
 	parentezco varchar(20),
@@ -827,7 +847,7 @@ create table parentezcos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table grupo_familiares_personas (
+CREATE TABLE IF NOT EXISTS grupo_familiares_personas (
 	-- Creamos atributos
 	grupo_familiar_id int not null,
 	persona_id int not null,
@@ -845,7 +865,7 @@ create table grupo_familiares_personas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table empleado_departamento_historial (
+CREATE TABLE IF NOT EXISTS empleado_departamento_historial (
 	-- Creamos atributos
 	empleado_id int not null,
 	departamento_id int not null,
@@ -865,7 +885,7 @@ create table empleado_departamento_historial (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table cursos (
+CREATE TABLE IF NOT EXISTS cursos (
 	-- Creamos atributos
 	curso_id int primary key auto_increment,
 	codigo varchar(10),
@@ -883,7 +903,7 @@ create table cursos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table empleado_curso (
+CREATE TABLE IF NOT EXISTS empleado_curso (
 	-- Creamos atributos
 	empleado_id int not null,
 	curso_id int not null,
@@ -904,7 +924,7 @@ create table empleado_curso (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table diagnosticos (
+CREATE TABLE IF NOT EXISTS diagnosticos (
 	-- Creamos atributos
 	diagnostico_id int primary key auto_increment,
 	codigo varchar(10),
@@ -918,7 +938,7 @@ create table diagnosticos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table lugares_accidentes (
+CREATE TABLE IF NOT EXISTS lugares_accidentes (
 	-- Creamos atributos
 	lugar_id int primary key auto_increment,
 	lugar varchar(50),
@@ -931,7 +951,7 @@ create table lugares_accidentes (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table accidentes_laborales (
+CREATE TABLE IF NOT EXISTS accidentes_laborales (
 	-- Creamos atributos
 	accidente_id int primary key auto_increment,
 	empleado_id int not null,
@@ -955,7 +975,7 @@ create table accidentes_laborales (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table tratamientos (
+CREATE TABLE IF NOT EXISTS tratamientos (
 	-- Creamos atributos
 	tratamiento_id int primary key auto_increment,
 	diagnostico_id int,
@@ -975,7 +995,7 @@ create table tratamientos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table revisiones_medicas (
+CREATE TABLE IF NOT EXISTS revisiones_medicas (
 	-- Creamos atributos
 	revision_id int primary key auto_increment,
 	empleado_id int not null,
@@ -990,7 +1010,7 @@ create table revisiones_medicas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table unidades_medicas (
+CREATE TABLE IF NOT EXISTS unidades_medicas (
 	-- Creamos atributos
 	unidad_id int primary key auto_increment,
 	unidad varchar(10),
@@ -1003,7 +1023,7 @@ create table unidades_medicas (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table parametros_medicos (
+CREATE TABLE IF NOT EXISTS parametros_medicos (
 	-- Creamos atributos
 	parametro_id int primary key auto_increment,
 	revision_id int not null,
@@ -1020,7 +1040,7 @@ create table parametros_medicos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table conceptos (
+CREATE TABLE IF NOT EXISTS conceptos (
 	-- Creamos atributos
 	concepto_id int primary key auto_increment,
 	codigo varchar(10),
@@ -1036,7 +1056,7 @@ create table conceptos (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table liquidaciones_sueldo (
+CREATE TABLE IF NOT EXISTS liquidaciones_sueldo (
 	-- Creamos atributos
 	liquidacion_id int primary key auto_increment,
 	empleado_id int not null,
@@ -1061,7 +1081,7 @@ create table liquidaciones_sueldo (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table detalle_liquidaciones (
+CREATE TABLE IF NOT EXISTS detalle_liquidaciones (
 	-- Creamos atributos
 	detalle_liquidacion_id int primary key auto_increment,
 	liquidacion_id int not null,
@@ -1085,7 +1105,7 @@ create table detalle_liquidaciones (
 );
 
 -- Relación cliente ↔ rubro
-create table cliente_rubro (
+CREATE TABLE IF NOT EXISTS cliente_rubro (
 	-- Creamos atributos
     cliente_id int not null,
     rubro_id int not null,
@@ -1101,7 +1121,7 @@ create table cliente_rubro (
 );
 
 -- Ranking del cliente
-create table ranking_cliente (
+CREATE TABLE IF NOT EXISTS ranking_cliente (
 	-- Creamos atributos
     cliente_id int primary key,
     ranking int check (ranking between 1 and 5),
